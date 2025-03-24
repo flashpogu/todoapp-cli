@@ -1,6 +1,3 @@
-/*
-Copyright © 2025 NAME HERE <EMAIL ADDRESS>
-*/
 package cmd
 
 import (
@@ -12,27 +9,27 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// Task struct
 type Task struct {
 	ID        int       `json:"id"`
 	Name      string    `json:"name"`
-	CreatedAt time.Time `json:"created_at"`
+	CreatedAt time.Time `json:"createdAt"`
+	Status    string    `json:"status"`
 }
 
 var taskFile = "tasks.json"
 
-// addCmd represents the add command
 var addCmd = &cobra.Command{
-	Use:   "add [task]",
+	Use:   "add [Task]",
 	Short: "Add a new task to your TODO list",
 	Run: func(cmd *cobra.Command, args []string) {
 		taskName := args[0]
-		tasks := readTasks()
+		tasks := readTask()
 
 		newTask := Task{
 			ID:        len(tasks) + 1,
 			Name:      taskName,
 			CreatedAt: time.Now(),
+			Status:    "pending",
 		}
 		tasks = append(tasks, newTask)
 
@@ -45,7 +42,7 @@ func init() {
 	rootCmd.AddCommand(addCmd)
 }
 
-func readTasks() []Task {
+func readTask() []Task {
 	var tasks []Task
 	file, err := os.ReadFile(taskFile)
 	if err == nil {
